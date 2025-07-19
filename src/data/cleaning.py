@@ -63,7 +63,7 @@ def main():
     
     curr_dir=pathlib.Path(__file__)
     home_dir=curr_dir.parent.parent.parent
-    data_path=home_dir.as_posix()+"data/raw/song_data.csv"
+    data_path=home_dir.as_posix()+"/data/raw/song_data.csv"
     # load the data
     data = pd.read_csv(data_path)
     
@@ -71,4 +71,8 @@ def main():
     cleaned_data = clean_data(data)
     
     # saved cleaned data
-    cleaned_data.to_csv(home_dir.as_posix() + "data/procesed/cleaned_data.csv",index=False)
+    cleaned_data.to_csv(home_dir.as_posix() + "/data/processed/cleaned_song_data.csv",index=False)
+    
+    
+if __name__ == "__main__":
+    main()

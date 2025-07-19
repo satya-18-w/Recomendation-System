@@ -1,0 +1,32 @@
+stages:
+  cleaning:
+
+    cmd: python src/data/cleaning.py data/raw/song_data.csv
+    deps:
+      - src/data/cleaning.py
+      - data/raw/song_data.csv
+
+      # outs:
+      # - data/processed
+
+
+  content_filter:
+    cmd: python src/features/content_based_filtering.py  /data/processed/cleaned_song_data.csv
+    deps:
+    - src/features/content_based_filtering.py
+    - data/processed/cleaned_song_data.csv
+
+
+  collborative_filter:
+    cmd: python src/features/collaborative_filtering.py /data/processed/cleaned_song_data.csv
+    deps:
+    - src/features/collaborative_filtering.py
+    - data/processed/cleaned_song_data.csv
+
+
+  transform_hybrid:
+    cmd: python src/models/transform_filtered_data.py  /data/filtered/colab_filtered_data.csv
+    deps:
+    - src/models/transform_filtered_data.py
+    - data/filtered/colab_filtered_data.csv
+

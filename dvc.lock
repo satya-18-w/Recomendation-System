@@ -1,0 +1,49 @@
+schema: '2.0'
+stages:
+  cleaning:
+    cmd: python src/data/cleaning.py data/raw/song_data.csv
+    deps:
+    - path: data/raw/song_data.csv
+      hash: md5
+      md5: 4ab5208326f3dd1ba5ab8aadaacf87c0
+      size: 15329540
+    - path: src/data/cleaning.py
+      hash: md5
+      md5: 816111da1403ace2069ef1005473500b
+      size: 2291
+  content_filter:
+    cmd: python src/features/content_based_filtering.py 
+      /data/processed/cleaned_song_data.csv
+    deps:
+    - path: data/processed/cleaned_song_data.csv
+      hash: md5
+      md5: 5ffe85dfb98f9a4b44ca09ece46f14d1
+      size: 14005181
+    - path: src/features/content_based_filtering.py
+      hash: md5
+      md5: cbcf51315c6c38200d6b37f52ad9fae1
+      size: 4065
+  collborative_filter:
+    cmd: python src/features/collaborative_filtering.py 
+      /data/processed/cleaned_song_data.csv
+    deps:
+    - path: data/processed/cleaned_song_data.csv
+      hash: md5
+      md5: 5ffe85dfb98f9a4b44ca09ece46f14d1
+      size: 14005181
+    - path: src/features/collaborative_filtering.py
+      hash: md5
+      md5: 086fbc076a63710465f97a33f1170fd3
+      size: 6353
+  transform_hybrid:
+    cmd: python src/models/transform_filtered_data.py  
+      /data/filtered/colab_filtered_data.csv
+    deps:
+    - path: data/filtered/colab_filtered_data.csv
+      hash: md5
+      md5: 7a46ab02b6c9a3a0ec9f187f917d0dbc
+      size: 8437363
+    - path: src/models/transform_filtered_data.py
+      hash: md5
+      md5: 24388d939d27dd6b276f687722798806
+      size: 672

@@ -12,10 +12,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import save_npz
 from src.data.cleaning import data_for_content_filtering
+import sys
 
-curr_dir=pathlib.Path(__file__)
-home_dir=curr_dir.parent.parent.parent
-data_path=home_dir.as_posix()+"data/processed/cleaned_data.csv"
 
 
 
@@ -28,7 +26,7 @@ min_max_scale_cols = ["danceability","energy","speechiness","acousticness","inst
 
 
 
-def train_transformer(data):
+def train_transformer(data,home_dir):
     """
     Trains a ColumnTransformer on the provided data and saves the transformer to a file.
     The ColumnTransformer applies the following transformations:
@@ -57,11 +55,11 @@ def train_transformer(data):
     transformer.fit(data)
 
     # save the transformer
-    joblib.dump(transformer, "transformer.joblib")
+    joblib.dump(transformer, home_dir.as_posix()+"/models/transformer.joblib")
     
     
     
-def transform_data(data):
+def transform_data(data,home_dir):
     """
     Transforms the input data using a pre-trained transformer.
     Args:
@@ -70,7 +68,7 @@ def transform_data(data):
         array-like: The transformed data.
     """
     # load the transformer
-    transformer = joblib.load("transformer.joblib")
+    transformer = joblib.load(home_dir.as_posix()+"/models/transformer.joblib")
     
     # transform the data
     transformed_data = transformer.transform(data)
@@ -83,7 +81,7 @@ def save_the_transformered_data(transformed_data,save_path):
     
     
     
-def recomendation(song_name,artist_name,song_data,transformed_data,k):
+def content_recomendation(song_name,artist_name,song_data,transformed_data,k):
     song_name=song_name.lower()
     artist_name=artist_name.lower()
     input_index=song_data[(song_data["name"] == song_name) & (song_data["artist"] == artist_name)].index[0]
@@ -104,15 +102,21 @@ def recomendation(song_name,artist_name,song_data,transformed_data,k):
 
 
 def main():
+    curr_dir=pathlib.Path(__file__)
+    home_dir=curr_dir.parent.parent.parent
+    file_path=sys.argv[1]
+    data_path=home_dir.as_posix()+file_path
     song_df=pd.read_csv(data_path)
     song_data=data_for_content_filtering(song_df)
-    train_transformer(song_data)
-    npz_path=home_dir.as_posix()+"data/raw/transformed.npz"
-    transformed_data=transform_data(song_data)
-    save_the_transformered_data(transform_data)
+    train_transformer(song_data,home_dir)
+    npz_path=home_dir.as_posix()+"/data/processed/transformed.npz"
+    transformed_data=transform_data(song_data,home_dir)
+    save_the_transformered_data(transformed_data,npz_path)
     
     
     
     
+if __name__ == "__main__":
+    main()
     
     
