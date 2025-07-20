@@ -146,7 +146,7 @@ PySide6_Essentials==6.8.3
 python-dateutil==2.9.0.post0
 pytz==2025.2
 pyvideoreader==0.5.7
-pywin32==310
+pywin32==310  sys_platform == "win32"
 PyYAML==6.0.2
 pyzmq==27.0.0
 QtPy==2.4.3
