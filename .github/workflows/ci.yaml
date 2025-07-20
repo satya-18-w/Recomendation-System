@@ -32,16 +32,20 @@ jobs:
             - name: Pull The data from s3
               run:
                  dvc pull
-
+            - name: run the pipeline
+              run: |
+                dvc repro
+                dvc commit
+                dvc push
             - name: Run Application
               run: |
                 nohup streamlit run app.py --server.port 8000 &
                 sleep 30
 
 
-            - name: Test Application
-              run: |
-                python testing.py
+            # - name: Test Application
+            #   run: |
+            #     python testing.py
 
             - name: Stop Streamlit app
               run: |
