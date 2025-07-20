@@ -1,0 +1,51 @@
+name: CI-CD
+
+on: push
+
+
+jobs:
+
+    CI:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Code Checkout
+              uses: actions/checkout@v4
+
+
+            - name: setup python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.12"
+                cache: pip
+
+
+            - name: Install Dependencies
+              run: |
+                pip install -r requirements.txt
+            - name: Configure Aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with :
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ap-south-1
+
+            - name: Pull The data from s3
+              run:
+                 dvc pull
+
+            - name: Run Application
+              run: |
+                nohup streamlit run app.py --server.port 8000 &
+                sleep 30
+
+
+            - name: Test Application
+              run: |
+                pytest testing.py
+
+            - name: Stop Streamlit app
+              run: |
+                pkill -f "streamlit run"
+
+              
+              
