@@ -13,3 +13,6 @@ def test_app_loading():
     assert status_code == 200, "Unable to load streamlit app"
     print("Streamlit app run succesfully")
     
+    
+if __name__ == "__main__":
+    test_app_loading()
